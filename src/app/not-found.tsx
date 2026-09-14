@@ -13,7 +13,7 @@ export default function NotFound() {
       <p className="max-w-sm text-sm text-muted-foreground">
         نشانی واردشده معتبر نیست یا این صفحه حذف شده است.
       </p>
-      <Button render={<Link href="/" />}>بازگشت به خانه</Button>
+      <Button nativeButton={false} render={<Link href="/" />}>بازگشت به خانه</Button>
     </div>
   );
 }

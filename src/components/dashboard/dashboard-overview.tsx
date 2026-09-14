@@ -92,11 +92,11 @@ export function DashboardOverview({
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" render={<Link href="/transactions" />}>
+          <Button nativeButton={false} variant="outline" render={<Link href="/transactions" />}>
             <ReceiptText className="size-4" />
             تراکنش‌ها
           </Button>
-          <Button render={<Link href="/exchange" />}>
+          <Button nativeButton={false} render={<Link href="/exchange" />}>
             <ArrowDownUp className="size-4" />
             تبدیل ارز
           </Button>
@@ -230,6 +230,7 @@ export function DashboardOverview({
                   </p>
                 </div>
                 <Button
+                  nativeButton={false}
                   variant="outline"
                   size="sm"
                   render={<Link href="/exchange" />}

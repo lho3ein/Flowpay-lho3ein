@@ -90,16 +90,16 @@ export default async function LandingPage() {
           <div className="flex items-center gap-2">
             <ThemeToggle />
             {session?.user ? (
-              <Button render={<Link href="/dashboard" />}>
+              <Button nativeButton={false} render={<Link href="/dashboard" />}>
                 <Wallet className="size-4" />
                 داشبورد من
               </Button>
             ) : (
               <>
-                <Button variant="ghost" render={<Link href="/login" />}>
+                <Button nativeButton={false} variant="ghost" render={<Link href="/login" />}>
                   ورود
                 </Button>
-                <Button render={<Link href="/register" />}>شروع رایگان</Button>
+                <Button nativeButton={false} render={<Link href="/register" />}>شروع رایگان</Button>
               </>
             )}
           </div>
@@ -134,11 +134,11 @@ export default async function LandingPage() {
                 تراکنش تکراری و قابل بازبینی.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-                <Button size="lg" render={<Link href="/register" />}>
+                <Button nativeButton={false} size="lg" render={<Link href="/register" />}>
                   <Wallet className="size-4" />
                   شروع رایگان
                 </Button>
-                <Button variant="outline" size="lg" render={<a href="#features" />}>
+                <Button nativeButton={false} variant="outline" size="lg" render={<a href="#features" />}>
                   مشاهده امکانات
                 </Button>
               </div>
@@ -290,6 +290,7 @@ export default async function LandingPage() {
                   <Button
                     size="lg"
                     className="bg-white text-primary hover:bg-white/90"
+                    nativeButton={false}
                     render={<Link href="/register" />}
                   >
                     <RefreshCw className="size-4" />
@@ -299,6 +300,7 @@ export default async function LandingPage() {
                     size="lg"
                     variant="outline"
                     className="border-white/40 bg-transparent text-primary-foreground hover:bg-white/15 hover:text-primary-foreground"
+                    nativeButton={false}
                     render={<Link href="/login" />}
                   >
                     ورود به حساب

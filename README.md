@@ -14,17 +14,15 @@
 
 ## پشتهٔ فنی
 
-| بخش | فناوری |
-| --- | --- |
-| فریم‌ورک | Next.js 16.3.5 (App Router) |
-| احراز هویت | next-auth@5.0.0-beta.32 (Auth.js) |
-| دیتابیس | PostgreSQL روی Neon + Prisma 7 (Driver Adapter `@prisma/adapter-pg`) |
-| اعتبارسنجی | Zod 4 |
-| فرم/استیت | React Hook Form، TanStack Query |
-| UI | Tailwind CSS v4 + shadcn/ui (بر پایهٔ Base UI) |
-| تست | Vitest (۴۶ تست: محاسبات مالی، فرمت اعداد، نرخ ارز، اِسکیمای اعتبارسنجی، نگاشت خطا) |
-
-> نکته: `next-auth@beta` عمداً انتخاب شد؛ نسخهٔ پایدار v4 از `next@16` پشتیبانی نمی‌کند و این نسخهٔ بتا به‌طور رسمی با `next@16` و `react@19` سازگار است.
+| بخش        | فناوری                                                                             |
+| ---------- | ---------------------------------------------------------------------------------- |
+| فریم‌ورک   | Next.js 16.3.5 (App Router)                                                        |
+| احراز هویت | next-auth@5.0.0-beta.32 (Auth.js)                                                  |
+| دیتابیس    | PostgreSQL روی Neon + Prisma 7 (Driver Adapter `@prisma/adapter-pg`)               |
+| اعتبارسنجی | Zod 4                                                                              |
+| فرم/استیت  | React Hook Form، TanStack Query                                                    |
+| UI         | Tailwind CSS v4 + shadcn/ui (بر پایهٔ Base UI)                                     |
+| تست        | Vitest (۴۶ تست: محاسبات مالی، فرمت اعداد، نرخ ارز، اِسکیمای اعتبارسنجی، نگاشت خطا) |
 
 ## راه‌اندازی
 
@@ -42,21 +40,21 @@ npm run dev
 
 ### کاربر دمو
 
-`demo@flowpay.app` / `Demo1234!` — با کیف پول‌های USD ۱۰٬۰۰۰، EUR ۲٬۴۵۰٫۵۰، GBP ۱٬۲۰۰ و AED ۵٬۰۰۰.
+`demo@flowpay.app` / `@Demo1234` — با کیف پول‌های USD ۱۰٬۰۰۰، EUR ۲٬۴۵۰٫۵۰، GBP ۱٬۲۰۰ و AED ۵٬۰۰۰.
 
 ## اسکریپت‌ها
 
-| دستور | توضیح |
-| --- | --- |
-| `npm run dev` | سرور توسعه |
-| `npm run build` | ساخت تولید |
-| `npm run start` | اجرای ساخت |
-| `npm run lint` | ESLint |
-| `npm run typecheck` | بررسی تایپ با tsc |
-| `npm run test` | اجرای Vitest |
-| `npm run verify` | لینت + تایپ‌چک + تست + بیلد |
-| `npm run db:seed` | اجرای Seed |
-| `npm run prisma:migrate` | مایگریشن در محیط توسعه |
+| دستور                    | توضیح                       |
+| ------------------------ | --------------------------- |
+| `npm run dev`            | سرور توسعه                  |
+| `npm run build`          | ساخت تولید                  |
+| `npm run start`          | اجرای ساخت                  |
+| `npm run lint`           | ESLint                      |
+| `npm run typecheck`      | بررسی تایپ با tsc           |
+| `npm run test`           | اجرای Vitest                |
+| `npm run verify`         | لینت + تایپ‌چک + تست + بیلد |
+| `npm run db:seed`        | اجرای Seed                  |
+| `npm run prisma:migrate` | مایگریشن در محیط توسعه      |
 
 ## معماری و تصمیمات کلیدی
 
@@ -88,15 +86,15 @@ npm run dev
 
 ## API
 
-| متد | مسیر | توضیح |
-| --- | --- | --- |
-| GET | `/api/currencies` | ارزهای فعال |
-| GET/POST | `/api/wallets` | کیف پول‌های کاربر / افزودن کیف پول |
-| GET | `/api/exchange-rates?from=&to=` | نرخ تبدیل لحظه‌ای |
-| GET | `/api/exchange/quote?from=&to=&amount=` | نقل‌قول تبدیل |
-| POST | `/api/exchange` | اجرای تبدیل (ایدمپوتنت) |
-| GET | `/api/transactions` | تاریخچهٔ تراکنش با فیلتر و صفحه‌بندی |
-| GET | `/api/transactions/:id` | جزئیات تراکنش |
+| متد      | مسیر                                    | توضیح                                |
+| -------- | --------------------------------------- | ------------------------------------ |
+| GET      | `/api/currencies`                       | ارزهای فعال                          |
+| GET/POST | `/api/wallets`                          | کیف پول‌های کاربر / افزودن کیف پول   |
+| GET      | `/api/exchange-rates?from=&to=`         | نرخ تبدیل لحظه‌ای                    |
+| GET      | `/api/exchange/quote?from=&to=&amount=` | نقل‌قول تبدیل                        |
+| POST     | `/api/exchange`                         | اجرای تبدیل (ایدمپوتنت)              |
+| GET      | `/api/transactions`                     | تاریخچهٔ تراکنش با فیلتر و صفحه‌بندی |
+| GET      | `/api/transactions/:id`                 | جزئیات تراکنش                        |
 
 ## تست
 

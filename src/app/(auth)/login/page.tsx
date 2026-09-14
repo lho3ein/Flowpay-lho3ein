@@ -27,22 +27,24 @@ export default function LoginPage() {
     },
   });
   return (
-    <div className="w-full max-w-md">
-      <Card>
+    <div className="relative z-10 w-full max-w-md">
+      <Card className="border-foreground/10 shadow-xl shadow-primary/5">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-2 grid size-12 place-items-center rounded-2xl bg-primary/10 text-primary">
-            <LogIn className="size-6" />
+          <div className="mx-auto mb-3 grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-primary to-indigo-600 text-primary-foreground shadow-lg shadow-primary/25">
+            <LogIn className="size-7" />
           </div>
-          <CardTitle className="text-2xl">ورود به فلوپی</CardTitle>
+          <CardTitle className="text-2xl font-black">ورود به فلوپی</CardTitle>
           <CardDescription>
             به کیف پول چندارزی خود دسترسی پیدا کنید
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <LoginForm form={form} />
-          <div className="flex items-center mt-4 space-x-2 rounded-lg border bg-muted/50 p-3 text-xs leading-6 text-muted-foreground">
-            <span className="font-semibold text-foreground">حساب نمونه:</span>
-            <span>demo@flowpay.app / @Demo1234</span>
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-dashed border-foreground/15 bg-muted/50 p-3 text-xs leading-6 text-muted-foreground">
+            <span>
+              <span className="font-semibold text-foreground">حساب نمونه: </span>
+              <span dir="ltr">demo@flowpay.app / @Demo1234</span>
+            </span>
             <FillDemoUser form={form} />
           </div>
         </CardContent>

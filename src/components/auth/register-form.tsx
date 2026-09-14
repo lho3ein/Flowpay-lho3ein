@@ -105,7 +105,7 @@ export function RegisterForm() {
 
       <Button
         type="submit"
-        className="w-full"
+        className="w-full bg-gradient-to-br from-primary to-indigo-600 shadow-lg shadow-primary/25 hover:from-primary hover:to-indigo-600"
         disabled={form.formState.isSubmitting}
       >
         {form.formState.isSubmitting && (

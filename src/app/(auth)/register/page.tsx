@@ -15,13 +15,13 @@ export const metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="w-full max-w-md">
-      <Card>
+    <div className="relative z-10 w-full max-w-md">
+      <Card className="border-foreground/10 shadow-xl shadow-primary/5">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-2 grid size-12 place-items-center rounded-2xl bg-primary/10 text-primary">
-            <Wallet className="size-6" />
+          <div className="mx-auto mb-3 grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-primary to-indigo-600 text-primary-foreground shadow-lg shadow-primary/25">
+            <Wallet className="size-7" />
           </div>
-          <CardTitle className="text-2xl">ایجاد حساب کاربری</CardTitle>
+          <CardTitle className="text-2xl font-black">ایجاد حساب کاربری</CardTitle>
           <CardDescription>
             کیف پول چندارزی خود را در فلوپی بسازید
           </CardDescription>

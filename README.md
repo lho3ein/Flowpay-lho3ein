@@ -26,7 +26,7 @@
 
 ## راه‌اندازی
 
-پیش‌نیازها: Node.js 20+، یک بانک Neon PostgreSQL.
+پیش‌نیازها: Node.js 20+، یک بانک PostgreSQL.
 
 ```bash
 cp .env.example .env        # سپس مقادیر واقعی را بگذارید

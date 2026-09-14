@@ -43,10 +43,20 @@ const FEATURES = [
 ];
 
 const CURRENCIES = [
-  { code: "USD", name: "دلار آمریکا", symbol: "$", note: "ارز مرجع برای محاسبه دارایی" },
+  {
+    code: "USD",
+    name: "دلار آمریکا",
+    symbol: "$",
+    note: "ارز مرجع برای محاسبه دارایی",
+  },
   { code: "EUR", name: "یورو", symbol: "€", note: "رایج‌ترین ارز اروپا" },
   { code: "GBP", name: "پوند انگلیس", symbol: "£", note: "ارز رسمی بریتانیا" },
-  { code: "AED", name: "درهم امارات", symbol: "د.إ", note: "ارتودلی منطقه‌ی خلیج" },
+  {
+    code: "AED",
+    name: "درهم امارات",
+    symbol: "د.إ",
+    note: "ارتودلی منطقه‌ی خلیج",
+  },
 ];
 
 const accentClass: Record<string, string> = {
@@ -62,10 +72,10 @@ export default async function LandingPage() {
   return (
     <div className="flex min-h-svh flex-col overflow-x-hidden bg-background">
       {/* ===== Header ===== */}
-      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between gap-4">
+      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
+        <div className="container mx-auto flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-indigo-600 text-primary-foreground shadow-md shadow-primary/25">
+            <span className="grid size-9 place-items-center rounded-xl bg-linear-to-br from-primary to-indigo-600 text-primary-foreground shadow-md shadow-primary/25">
               <Wallet className="size-5" />
             </span>
             <span className="text-xl font-bold">فلوپی</span>
@@ -96,10 +106,16 @@ export default async function LandingPage() {
               </Button>
             ) : (
               <>
-                <Button nativeButton={false} variant="ghost" render={<Link href="/login" />}>
+                <Button
+                  nativeButton={false}
+                  variant="ghost"
+                  render={<Link href="/login" />}
+                >
                   ورود
                 </Button>
-                <Button nativeButton={false} render={<Link href="/register" />}>شروع رایگان</Button>
+                <Button nativeButton={false} render={<Link href="/register" />}>
+                  شروع رایگان
+                </Button>
               </>
             )}
           </div>
@@ -115,7 +131,7 @@ export default async function LandingPage() {
             <div className="absolute bottom-0 right-1/3 size-64 rounded-full bg-currency-usd/10 blur-3xl" />
           </div>
 
-          <div className="container relative grid items-center gap-12 lg:grid-cols-2">
+          <div className="container mx-auto relative grid items-center gap-12 lg:grid-cols-2">
             <div className="space-y-6 text-center lg:text-start">
               <Badge className="border-primary/30 bg-primary/10 px-3 py-1 text-primary">
                 <Sparkles className="size-3" />
@@ -123,22 +139,31 @@ export default async function LandingPage() {
               </Badge>
               <h1 className="text-3xl font-black leading-tight sm:text-5xl">
                 دارایی‌هایت را در یک کیف پول{" "}
-                <span className="bg-gradient-to-l from-primary to-indigo-500 bg-clip-text text-transparent">
+                <span className="bg-linear-to-l from-primary to-indigo-500 bg-clip-text text-transparent">
                   هوشمند
                 </span>{" "}
                 نگه‌دار و تبدیل کن
               </h1>
               <p className="mx-auto max-w-xl text-base text-muted-foreground lg:mx-0">
-                فلوپی به شما امکان می‌دهد ارزهای بین‌المللی را به‌صورت امن نگهداری و
-                با نرخ لحظه‌ای و کارمزد شفاف به هم تبدیل کنید؛ همه‌چیز اتمیک، بدون
-                تراکنش تکراری و قابل بازبینی.
+                فلوپی به شما امکان می‌دهد ارزهای بین‌المللی را به‌صورت امن
+                نگهداری و با نرخ لحظه‌ای و کارمزد شفاف به هم تبدیل کنید؛ همه‌چیز
+                اتمیک، بدون تراکنش تکراری و قابل بازبینی.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-                <Button nativeButton={false} size="lg" render={<Link href="/register" />}>
+                <Button
+                  nativeButton={false}
+                  size="lg"
+                  render={<Link href="/register" />}
+                >
                   <Wallet className="size-4" />
                   شروع رایگان
                 </Button>
-                <Button nativeButton={false} variant="outline" size="lg" render={<a href="#features" />}>
+                <Button
+                  nativeButton={false}
+                  variant="outline"
+                  size="lg"
+                  render={<a href="#features" />}
+                >
                   مشاهده امکانات
                 </Button>
               </div>
@@ -146,7 +171,7 @@ export default async function LandingPage() {
 
             {/* کارت نمونه‌ی تبدیل */}
             <div className="relative mx-auto w-full max-w-md">
-              <div className="absolute inset-0 -z-10 scale-105 rounded-3xl bg-gradient-to-br from-primary/25 via-currency-eur/15 to-currency-usd/15 blur-2xl" />
+              <div className="absolute inset-0 -z-10 scale-105 rounded-3xl bg-linear-to-br from-primary/25 via-currency-eur/15 to-currency-usd/15 blur-2xl" />
               <div className="rounded-3xl bg-card p-6 shadow-xl shadow-primary/10 ring-1 ring-foreground/10">
                 <div className="mb-5 flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
@@ -172,7 +197,12 @@ export default async function LandingPage() {
                       <ArrowDownUp className="size-4 text-muted-foreground" />
                     </span>
                   </div>
-                  <ExchangeRow label="به" code="EUR" amount="۸۵۱٫۲۰" highlight />
+                  <ExchangeRow
+                    label="به"
+                    code="EUR"
+                    amount="۸۵۱٫۲۰"
+                    highlight
+                  />
                 </div>
 
                 <div className="mt-5 space-y-1.5 rounded-2xl bg-muted/70 p-4 text-sm">
@@ -180,9 +210,7 @@ export default async function LandingPage() {
                   <Row label="کارمزد" value="$ ۷٫۵۰" />
                   <div className="flex items-center justify-between pt-1">
                     <span className="text-muted-foreground">دریافتی</span>
-                    <b className="text-base text-currency-usd">
-                      € ۸۵۱٫۲۰
-                    </b>
+                    <b className="text-base text-currency-usd">€ ۸۵۱٫۲۰</b>
                   </div>
                 </div>
               </div>
@@ -192,7 +220,7 @@ export default async function LandingPage() {
 
         {/* ===== آمار ===== */}
         <section className="border-y bg-card/60 py-10">
-          <div className="container grid grid-cols-2 gap-6 text-center sm:grid-cols-4">
+          <div className="container mx-auto grid grid-cols-2 gap-6 text-center sm:grid-cols-4">
             {[
               { value: "۴", label: "ارز بین‌المللی" },
               { value: "۰٫۷۵٪", label: "کارمزد تبدیل" },
@@ -209,13 +237,14 @@ export default async function LandingPage() {
 
         {/* ===== امکانات ===== */}
         <section id="features" className="py-20 md:py-24">
-          <div className="container space-y-12">
+          <div className="container mx-auto space-y-12">
             <div className="mx-auto max-w-2xl space-y-3 text-center">
               <h2 className="text-2xl font-black sm:text-4xl">
                 همه‌چیز برای مدیریت هوشمند دارایی
               </h2>
               <p className="text-muted-foreground">
-                سرویس‌های فلوپی حول سه اصل «امنیت»، «شفافیت» و «سرعت» طراحی شده‌اند.
+                سرویس‌های فلوپی حول سه اصل «امنیت»، «شفافیت» و «سرعت» طراحی
+                شده‌اند.
               </p>
             </div>
 
@@ -240,11 +269,14 @@ export default async function LandingPage() {
 
         {/* ===== ارزها ===== */}
         <section id="currencies" className="py-16 md:py-20">
-          <div className="container space-y-10">
+          <div className="container mx-auto space-y-10">
             <div className="mx-auto max-w-2xl space-y-3 text-center">
-              <h2 className="text-2xl font-black sm:text-4xl">ارزهای پشتیبانی‌شده</h2>
+              <h2 className="text-2xl font-black sm:text-4xl">
+                ارزهای پشتیبانی‌شده
+              </h2>
               <p className="text-muted-foreground">
-                با افتتاح حساب، کیف پول تمام این ارزها به‌صورت خودکار برای شما ساخته می‌شود.
+                با افتتاح حساب، کیف پول تمام این ارزها به‌صورت خودکار برای شما
+                ساخته می‌شود.
               </p>
             </div>
 
@@ -257,12 +289,14 @@ export default async function LandingPage() {
                   <span
                     className={`grid size-12 shrink-0 place-items-center rounded-2xl ${accentClass[c.code]} bg-current/10`}
                   >
-                    <Banknote className="size-6 text-[inherit]" />
+                    <Banknote className="size-6 text-inherit" />
                   </span>
                   <div>
                     <p className="font-bold">
                       {c.name}{" "}
-                      <span className="text-sm text-muted-foreground">({c.code})</span>
+                      <span className="text-sm text-muted-foreground">
+                        ({c.code})
+                      </span>
                     </p>
                     <p className="text-xs text-muted-foreground">{c.note}</p>
                   </div>
@@ -274,8 +308,8 @@ export default async function LandingPage() {
 
         {/* ===== CTA ===== */}
         <section id="cta" className="py-16 md:py-20">
-          <div className="container">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-indigo-600 to-indigo-800 px-6 py-14 text-center text-primary-foreground shadow-xl shadow-primary/25">
+          <div className="container mx-auto">
+            <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary via-indigo-600 to-indigo-800 px-6 py-14 text-center text-primary-foreground shadow-xl shadow-primary/25">
               <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-white/10 blur-2xl" />
               <div className="pointer-events-none absolute -bottom-20 -left-16 size-72 rounded-full bg-white/10 blur-3xl" />
               <div className="relative mx-auto max-w-xl space-y-5">
@@ -283,8 +317,8 @@ export default async function LandingPage() {
                   همین حالا کیف پول چندارزی خودت را بساز
                 </h2>
                 <p className="text-primary-foreground/80">
-                  ثبت‌نام رایگان است؛ کمتر از یک دقیقه طول می‌کشد و تمام کیف پول‌ها
-                  بلافاصله فعال می‌شوند.
+                  ثبت‌نام رایگان است؛ کمتر از یک دقیقه طول می‌کشد و تمام کیف
+                  پول‌ها بلافاصله فعال می‌شوند.
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <Button
@@ -313,7 +347,7 @@ export default async function LandingPage() {
       </main>
 
       {/* ===== Footer ===== */}
-      <footer className="border-t py-8">
+      <footer className="border-t py-8 mx-auto container">
         <div className="container flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
             <span className="grid size-7 place-items-center rounded-lg bg-primary text-primary-foreground">
@@ -322,7 +356,7 @@ export default async function LandingPage() {
             <span className="font-bold">فلوپی</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            © ۱۴۰۵ فلوپی — تمامی حقوق محفوظ است.
+            © ۱۴۰۵ فلوپی —ساخته شده توسط lho3ein.ir تمامی حقوق محفوظ است.
           </p>
         </div>
       </footer>
@@ -344,7 +378,9 @@ function ExchangeRow({
   return (
     <div
       className={`flex items-center justify-between rounded-2xl px-4 py-3 ${
-        highlight ? "bg-currency-eur/10 ring-1 ring-currency-eur/30" : "bg-muted/70"
+        highlight
+          ? "bg-currency-eur/10 ring-1 ring-currency-eur/30"
+          : "bg-muted/70"
       }`}
     >
       <span className="text-sm text-muted-foreground">{label}</span>
@@ -352,7 +388,10 @@ function ExchangeRow({
         <code className="rounded-md bg-background px-1.5 py-0.5 text-xs font-bold">
           {code}
         </code>
-        <b className={`tabular-nums ${highlight ? "text-currency-eur" : ""}`} dir="ltr">
+        <b
+          className={`tabular-nums ${highlight ? "text-currency-eur" : ""}`}
+          dir="ltr"
+        >
           {amount}
         </b>
       </span>
@@ -360,7 +399,15 @@ function ExchangeRow({
   );
 }
 
-function Row({ label, value, dir }: { label: string; value: string; dir?: string }) {
+function Row({
+  label,
+  value,
+  dir,
+}: {
+  label: string;
+  value: string;
+  dir?: string;
+}) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-muted-foreground">{label}</span>

@@ -48,18 +48,21 @@ export function DashboardNav({
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4">
         <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="flex items-center gap-2 font-black">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 font-black"
+          >
             <span className="grid size-8 place-items-center rounded-xl bg-gradient-to-br from-primary to-indigo-600 text-primary-foreground shadow-md shadow-primary/25">
               <Wallet className="size-4" />
             </span>
             فلوپی
           </Link>
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="flex items-center gap-1">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={navClass(item.href)}
+                className={`text-xs sm:text-base ${navClass(item.href)}`}
               >
                 {item.label}
               </Link>
@@ -95,7 +98,7 @@ export function DashboardNav({
                 className="text-destructive focus:text-destructive cursor-pointer hover:bg-accent/15"
                 onClick={async () => {
                   await signOut({ redirect: false });
-                  router.push("/login");
+                  router.push("/");
                 }}
               >
                 <LogOut className="ml-2 size-4" />
@@ -107,7 +110,7 @@ export function DashboardNav({
       </div>
 
       {/* منوی موبایل */}
-      <nav className="flex items-center gap-2 overflow-x-auto border-t bg-background/80 px-4 py-2 backdrop-blur md:hidden">
+      {/* <nav className="flex items-center gap-2 overflow-x-auto border-t bg-background/80 px-4 py-2 backdrop-blur md:hidden">
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.href}
@@ -117,7 +120,7 @@ export function DashboardNav({
             {item.label}
           </Link>
         ))}
-      </nav>
+      </nav> */}
     </header>
   );
 }

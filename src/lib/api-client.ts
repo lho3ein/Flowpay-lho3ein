@@ -2,6 +2,9 @@ import type {
   CurrenciesResponse,
   ExchangeQuoteResponse,
   ExchangeResponse,
+  TransactionDetailResponse,
+  TransactionFilters,
+  TransactionsResponse,
   WalletDto,
   WalletsResponse,
 } from "@/types/models";
@@ -49,4 +52,23 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     }).then((r) => handle<ExchangeResponse>(r)),
+  getTransactions: (filters: TransactionFilters) => {
+    const params = new URLSearchParams();
+    if (filters.page !== undefined) params.set("page", String(filters.page));
+    if (filters.limit !== undefined) params.set("limit", String(filters.limit));
+    if (filters.status) params.set("status", filters.status);
+    if (filters.type) params.set("type", filters.type);
+    if (filters.fromCode) params.set("fromCode", filters.fromCode);
+    if (filters.toCode) params.set("toCode", filters.toCode);
+    if (filters.fromDate) params.set("fromDate", filters.fromDate);
+    if (filters.toDate) params.set("toDate", filters.toDate);
+    const qs = params.toString();
+    return fetch(`/api/transactions${qs ? `?${qs}` : ""}`).then((r) =>
+      handle<TransactionsResponse>(r),
+    );
+  },
+  getTransaction: (id: string) =>
+    fetch(`/api/transactions/${id}`).then((r) =>
+      handle<TransactionDetailResponse>(r),
+    ),
 };

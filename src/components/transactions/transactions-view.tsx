@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { ArrowDownUp } from "lucide-react";
+import { ArrowDownUp, CalendarDays, ListFilter, ReceiptText } from "lucide-react";
 import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -46,9 +46,26 @@ const STATUS_LABEL: Record<string, string> = {
   FAILED: "ناموفق",
 };
 
+const STATUS_BADGE: Record<string, string> = {
+  COMPLETED: "border-success/30 bg-success/10 text-success",
+  PENDING: "border-warning/30 bg-warning/10 text-warning",
+  FAILED: "border-destructive/30 bg-destructive/10 text-destructive",
+};
+
 const TYPE_LABEL: Record<string, string> = {
   EXCHANGE: "تبدیل",
 };
+
+const CURRENCY_TONE: Record<string, string> = {
+  USD: "bg-currency-usd/12 text-currency-usd ring-currency-usd/30",
+  EUR: "bg-currency-eur/12 text-currency-eur ring-currency-eur/30",
+  GBP: "bg-currency-gbp/12 text-currency-gbp ring-currency-gbp/30",
+  AED: "bg-currency-aed/12 text-currency-aed ring-currency-aed/30",
+};
+
+function currencyTone(code: string) {
+  return CURRENCY_TONE[code] ?? "bg-primary/10 text-primary ring-primary/30";
+}
 
 const PAGE_SIZE = 20;
 
@@ -90,18 +107,27 @@ export function TransactionsView() {
   const items = query.data?.items ?? [];
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold">تراکنش‌ها</h1>
+    <div className="space-y-5">
+      <div className="space-y-1">
+        <h1 className="flex items-center gap-2 text-2xl font-black sm:text-3xl">
+          <span className="grid size-10 place-items-center rounded-2xl bg-primary/10 text-primary">
+            <ReceiptText className="size-5" />
+          </span>
+          تراکنش‌ها
+        </h1>
         <p className="text-sm text-muted-foreground">
-          تاریخچه کامل تراکنش‌های شما
+          تاریخچه‌ی کامل تراکنش‌های شما
         </p>
       </div>
 
       <Card>
         <CardContent className="p-4">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="space-y-1">
+          <div className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            <ListFilter className="size-4 text-primary" />
+            فیلترها
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-1.5">
               <span className="text-xs text-muted-foreground">وضعیت</span>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="w-full">
@@ -115,7 +141,7 @@ export function TransactionsView() {
               </Select>
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <span className="text-xs text-muted-foreground">نوع</span>
               <Select value={type} onValueChange={setType}>
                 <SelectTrigger className="w-full">
@@ -127,27 +153,25 @@ export function TransactionsView() {
               </Select>
             </div>
 
-            <div className="space-y-1">
-              <span className="text-xs text-muted-foreground">از (کد ارز)</span>
-              <Input
-                dir="ltr"
-                placeholder="USD"
-                value={fromCode}
-                onChange={(e) => setFromCode(e.target.value.toUpperCase())}
-              />
+            <div className="space-y-1.5">
+              <span className="text-xs text-muted-foreground">از → به (کد ارز)</span>
+              <div className="grid grid-cols-2 gap-2">
+                <Input
+                  dir="ltr"
+                  placeholder="USD"
+                  value={fromCode}
+                  onChange={(e) => setFromCode(e.target.value.toUpperCase())}
+                />
+                <Input
+                  dir="ltr"
+                  placeholder="EUR"
+                  value={toCode}
+                  onChange={(e) => setToCode(e.target.value.toUpperCase())}
+                />
+              </div>
             </div>
 
-            <div className="space-y-1">
-              <span className="text-xs text-muted-foreground">به (کد ارز)</span>
-              <Input
-                dir="ltr"
-                placeholder="EUR"
-                value={toCode}
-                onChange={(e) => setToCode(e.target.value.toUpperCase())}
-              />
-            </div>
-
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <span className="text-xs text-muted-foreground">از تاریخ</span>
               <Input
                 type="date"
@@ -156,7 +180,7 @@ export function TransactionsView() {
               />
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <span className="text-xs text-muted-foreground">تا تاریخ</span>
               <Input
                 type="date"
@@ -183,21 +207,26 @@ export function TransactionsView() {
                 : "خطا در دریافت تراکنش‌ها"}
             </p>
           ) : items.length === 0 ? (
-            <div className="flex flex-col items-center gap-2 py-16 text-center text-muted-foreground">
-              <ArrowDownUp className="size-8 opacity-40" />
-              <p>تراکنشی یافت نشد.</p>
+            <div className="flex flex-col items-center gap-3 py-16 text-center text-muted-foreground">
+              <span className="grid size-12 place-items-center rounded-2xl bg-muted">
+                <ArrowDownUp className="size-6" />
+              </span>
+              <div className="space-y-1">
+                <p className="font-medium text-foreground">تراکنشی یافت نشد.</p>
+                <p className="text-sm">فیلترها را تغییر دهید یا یک تبدیل انجام دهید.</p>
+              </div>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>تاریخ</TableHead>
-                  <TableHead>نوع</TableHead>
-                  <TableHead>از</TableHead>
-                  <TableHead>به</TableHead>
-                  <TableHead>مبلغ</TableHead>
-                  <TableHead>دریافتی</TableHead>
-                  <TableHead>وضعیت</TableHead>
+                <TableRow className="bg-muted/50 hover:bg-muted/50">
+                  <TableHead className="text-muted-foreground">تاریخ</TableHead>
+                  <TableHead className="text-muted-foreground">نوع</TableHead>
+                  <TableHead className="text-muted-foreground">از</TableHead>
+                  <TableHead className="text-muted-foreground">به</TableHead>
+                  <TableHead className="text-muted-foreground">مبلغ</TableHead>
+                  <TableHead className="text-muted-foreground">دریافتی</TableHead>
+                  <TableHead className="text-muted-foreground">وضعیت</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -211,7 +240,7 @@ export function TransactionsView() {
       </Card>
 
       {query.data && query.data.totalPages > 1 && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
             {query.data.total.toLocaleString("fa-IR")} تراکنش
           </p>
@@ -224,7 +253,7 @@ export function TransactionsView() {
             >
               قبلی
             </Button>
-            <span className="text-sm tabular-nums">
+            <span className="rounded-lg bg-card px-2.5 py-1 text-sm tabular-nums ring-1 ring-foreground/10">
               {page.toLocaleString("fa-IR")} /{" "}
               {query.data.totalPages.toLocaleString("fa-IR")}
             </span>
@@ -257,32 +286,44 @@ function TransactionRow({ tx }: { tx: TransactionListItemDto }) {
 
   return (
     <>
-      <TableRow className="cursor-pointer" onClick={() => setOpen(true)}>
-        <TableCell className="text-nowrap">
-          {new Date(tx.createdAt).toLocaleDateString("fa-IR")}
-        </TableCell>
-        <TableCell>
+      <TableRow
+        className="cursor-pointer transition-colors hover:bg-muted/50"
+        onClick={() => setOpen(true)}
+      >
+        <TableCell className="text-nowrap text-muted-foreground">
           <span className="flex items-center gap-1.5">
-            <b>{TYPE_LABEL[tx.type] ?? tx.type}</b>
-            {hasFilters && (
-              <ArrowDownUp className="size-3.5 text-muted-foreground" />
-            )}
+            <CalendarDays className="size-3.5" />
+            {new Date(tx.createdAt).toLocaleDateString("fa-IR")}
           </span>
         </TableCell>
         <TableCell>
-          <Badge variant="secondary">{tx.fromCurrency.code}</Badge>
+          <span className="flex items-center gap-1.5 font-medium">
+            {TYPE_LABEL[tx.type] ?? tx.type}
+            {hasFilters && <ArrowDownUp className="size-3.5 text-muted-foreground" />}
+          </span>
         </TableCell>
         <TableCell>
-          <Badge variant="secondary">{tx.toCurrency.code}</Badge>
+          <span
+            className={`rounded-lg px-2 py-0.5 text-xs font-bold tabular-nums ring-1 ${currencyTone(tx.fromCurrency.code)}`}
+          >
+            {tx.fromCurrency.code}
+          </span>
         </TableCell>
-        <TableCell className="tabular-nums">
+        <TableCell>
+          <span
+            className={`rounded-lg px-2 py-0.5 text-xs font-bold tabular-nums ring-1 ${currencyTone(tx.toCurrency.code)}`}
+          >
+            {tx.toCurrency.code}
+          </span>
+        </TableCell>
+        <TableCell className="font-medium tabular-nums" dir="ltr">
           {formatMoney(
             tx.sourceAmount,
             tx.fromCurrency.decimalPlaces,
             tx.fromCurrency.symbol,
           )}
         </TableCell>
-        <TableCell className="tabular-nums">
+        <TableCell className="font-medium text-success tabular-nums" dir="ltr">
           {formatMoney(
             tx.destinationAmount,
             tx.toCurrency.decimalPlaces,
@@ -290,15 +331,7 @@ function TransactionRow({ tx }: { tx: TransactionListItemDto }) {
           )}
         </TableCell>
         <TableCell>
-          <Badge
-            variant={
-              tx.status === "COMPLETED"
-                ? "default"
-                : tx.status === "FAILED"
-                  ? "destructive"
-                  : "secondary"
-            }
-          >
+          <Badge variant="outline" className={STATUS_BADGE[tx.status] ?? ""}>
             {STATUS_LABEL[tx.status] ?? tx.status}
           </Badge>
         </TableCell>
@@ -333,6 +366,7 @@ function TransactionRow({ tx }: { tx: TransactionListItemDto }) {
                   detail.data.transaction.fromCurrency.decimalPlaces,
                   detail.data.transaction.fromCurrency.symbol,
                 )}
+                tone={currencyTone(detail.data.transaction.fromCurrency.code)}
               />
               <DetailItem
                 label="مبلغ دریافتی"
@@ -341,6 +375,7 @@ function TransactionRow({ tx }: { tx: TransactionListItemDto }) {
                   detail.data.transaction.toCurrency.decimalPlaces,
                   detail.data.transaction.toCurrency.symbol,
                 )}
+                tone="text-success"
               />
               <DetailItem
                 label="کارمزد"
@@ -357,6 +392,7 @@ function TransactionRow({ tx }: { tx: TransactionListItemDto }) {
               <DetailItem
                 label="وضعیت"
                 value={STATUS_LABEL[detail.data.transaction.status] ?? detail.data.transaction.status}
+                tone={STATUS_BADGE[detail.data.transaction.status]}
               />
               <DetailItem
                 label="تاریخ"
@@ -370,11 +406,19 @@ function TransactionRow({ tx }: { tx: TransactionListItemDto }) {
   );
 }
 
-function DetailItem({ label, value }: { label: string; value: string }) {
+function DetailItem({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: string;
+}) {
   return (
-    <div className="rounded-lg border bg-muted/40 p-3">
+    <div className="rounded-xl border bg-muted/40 p-3">
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="mt-0.5 font-medium tabular-nums">{value}</p>
+      <p className={`mt-0.5 font-medium tabular-nums ${tone ?? ""}`}>{value}</p>
     </div>
   );
 }

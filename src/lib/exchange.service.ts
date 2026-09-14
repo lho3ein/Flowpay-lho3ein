@@ -113,43 +113,45 @@ export async function executeExchange(
       throw new ExchangeError("WALLET_NOT_FOUND");
     }
 
-    // Idempotency: تلاش برای ثبت کلید یکتا
-    let idempotencyRecord;
+    // Idempotency: بررسی کلید یکتا قبل از هر تغییر مخرب.
+    // به لطف قفل FOR UPDATE روی کیف پول مبدأ، درخواست‌های همزمان همان کاربر
+    // سریال می‌شوند؛ بنابراین اینجا race روی create وجود ندارد.
+    const existingIdempotency = await tx.idempotencyKey.findUnique({
+      where: { userId_key: { userId: input.userId, key: idempotencyKey } },
+      include: {
+        transaction: { select: { id: true } },
+      },
+    });
+
+    // پخش مجدد درخواست قبلی موفق → بازگرداندن همان تراکنش
+    if (existingIdempotency?.transaction) {
+      return {
+        transaction: await mapTransaction(tx, existingIdempotency.transaction.id),
+        replayed: true,
+        quote,
+      };
+    }
+
+    // کلید یتیم از اجرای ناموفق قبلی → حذف و ادامه
+    if (existingIdempotency) {
+      await tx.idempotencyKey.delete({ where: { id: existingIdempotency.id } });
+    }
+
+    let idempotencyRecord: { id: string } | undefined;
     try {
       idempotencyRecord = await tx.idempotencyKey.create({
         data: { userId: input.userId, key: idempotencyKey },
         select: { id: true },
       });
     } catch (error) {
+      // در حالت نادر رقابت هم‌زمان؛ تراکنش جاری aborted شده و ادامه ممکن نیست
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === "P2002"
       ) {
-        const existing = await tx.idempotencyKey.findUnique({
-          where: { userId_key: { userId: input.userId, key: idempotencyKey } },
-          include: { transaction: true },
-        });
-
-        // اگر کلید قبلاً تراکنش موفق داشته باشد، همان نتیجه بازگردانده می‌شود
-        if (existing?.transaction) {
-          return {
-            transaction: await mapTransaction(tx, existing.transaction.id),
-            replayed: true,
-            quote,
-          };
-        }
-
-        // کلید یتیم از اجرای ناموفق قبلی → حذف و ادامه
-        if (existing) {
-          await tx.idempotencyKey.delete({ where: { id: existing.id } });
-          idempotencyRecord = await tx.idempotencyKey.create({
-            data: { userId: input.userId, key: idempotencyKey },
-            select: { id: true },
-          });
-        }
-      } else {
-        throw error;
+        throw new ExchangeError("DUPLICATE_REQUEST");
       }
+      throw error;
     }
 
     if (!idempotencyRecord) {

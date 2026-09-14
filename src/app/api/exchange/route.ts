@@ -12,6 +12,23 @@ export const POST = withAuth(async (req: NextRequest, userId: string) => {
   const parsed = exchangeSchema.safeParse(body);
 
   if (!parsed.success) {
+    // اگر خطا ناشی از یکسان بودن ارزهاست، کد معنایی برگردانده شود
+    const raw = body as { fromCode?: string; toCode?: string } | null;
+    if (
+      raw &&
+      typeof raw.fromCode === "string" &&
+      typeof raw.toCode === "string" &&
+      raw.fromCode.trim().toUpperCase() === raw.toCode.trim().toUpperCase()
+    ) {
+      return NextResponse.json(
+        {
+          error: "SAME_CURRENCY",
+          message: "ارز مبدأ و مقصد نمی‌توانند یکسان باشند",
+        },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
       {
         error: "INVALID_INPUT",
@@ -35,7 +52,7 @@ export const POST = withAuth(async (req: NextRequest, userId: string) => {
         transaction: result.transaction,
         replayed: result.replayed,
       },
-      { status: 201 },
+      { status: result.replayed ? 200 : 201 },
     );
   } catch (error) {
     if (error instanceof ExchangeError) {

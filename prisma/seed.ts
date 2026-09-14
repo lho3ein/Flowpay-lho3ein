@@ -21,7 +21,7 @@ const USD_RATES: Record<string, string> = {
 
 const DEMO_USER = {
   email: "demo@flowpay.app",
-  password: "Demo1234!",
+  password: "@Demo1234",
   name: "کاربر نمونه",
 };
 
@@ -39,7 +39,11 @@ async function seedCurrencies() {
   for (const c of CURRENCIES) {
     await prisma.currency.upsert({
       where: { code: c.code },
-      update: { name: c.name, symbol: c.symbol, decimalPlaces: c.decimalPlaces },
+      update: {
+        name: c.name,
+        symbol: c.symbol,
+        decimalPlaces: c.decimalPlaces,
+      },
       create: c,
     });
   }
@@ -65,12 +69,14 @@ async function seedRates() {
       if (base === "USD") {
         rate = new Decimal(USD_RATES[quote as keyof typeof USD_RATES]);
       } else if (quote === "USD") {
-        rate = new Decimal(1).dividedBy(USD_RATES[base as keyof typeof USD_RATES]);
-      } else {
-        // نرخ متقاطع: USD→quote تقسیم بر USD→base
-        rate = new Decimal(USD_RATES[quote as keyof typeof USD_RATES]).dividedBy(
+        rate = new Decimal(1).dividedBy(
           USD_RATES[base as keyof typeof USD_RATES],
         );
+      } else {
+        // نرخ متقاطع: USD→quote تقسیم بر USD→base
+        rate = new Decimal(
+          USD_RATES[quote as keyof typeof USD_RATES],
+        ).dividedBy(USD_RATES[base as keyof typeof USD_RATES]);
       }
 
       await prisma.exchangeRate.create({
@@ -92,7 +98,9 @@ async function seedDemoUser() {
 
   const user = await prisma.user.upsert({
     where: { email: DEMO_USER.email },
-    update: {},
+    update: {
+      passwordHash,
+    },
     create: {
       email: DEMO_USER.email,
       name: DEMO_USER.name,

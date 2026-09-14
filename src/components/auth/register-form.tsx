@@ -14,10 +14,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  registerSchema,
-  type RegisterInput,
-} from "@/validations/auth.schema";
+import { registerSchema, type RegisterInput } from "@/validations/auth.schema";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -84,7 +81,6 @@ export function RegisterForm() {
             type="email"
             placeholder="you@example.com"
             autoComplete="email"
-            dir="ltr"
             aria-invalid={!!form.formState.errors.email}
             {...form.register("email")}
           />

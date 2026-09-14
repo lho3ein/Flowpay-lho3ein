@@ -1,10 +1,8 @@
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,19 +13,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { loginSchema, type LoginInput } from "@/validations/auth.schema";
+import { type LoginInput } from "@/validations/auth.schema";
+type prpFill = {
+  form: UseFormReturn<LoginInput>;
+};
 
-export function LoginForm() {
+export function LoginForm({ form }: prpFill) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
-
-  const form = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
 
   async function onSubmit(values: LoginInput) {
     setServerError(null);
@@ -45,7 +38,7 @@ export function LoginForm() {
     router.push("/dashboard");
     router.refresh();
   }
-
+  // form useForm be dalil estefade az filldemo az component valed grefte shod
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       {serverError && (
@@ -61,8 +54,9 @@ export function LoginForm() {
             id="email"
             type="email"
             placeholder="you@example.com"
+            // value={demoEmail}
+            // onChange={(e)=>setDemoEmail(e.target.value)}
             autoComplete="email"
-            dir="ltr"
             aria-invalid={!!form.formState.errors.email}
             {...form.register("email")}
           />

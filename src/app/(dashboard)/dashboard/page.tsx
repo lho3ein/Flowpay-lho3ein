@@ -58,9 +58,7 @@ export default async function DashboardPage() {
   const totalUsd = computeTotalInUsd(
     wallets.map((w) => ({ code: w.currency.code, balance: w.balance })),
     (code) =>
-      code === "USD"
-        ? new Decimal(1)
-        : (usdRateMap?.get(code)?.rate ?? null),
+      code === "USD" ? new Decimal(1) : (usdRateMap?.get(code)?.rate ?? null),
   );
 
   return (

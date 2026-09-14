@@ -69,7 +69,10 @@ function currencyTone(code: string) {
 export function ExchangeView({ initialSource }: { initialSource?: string }) {
   const queryClient = useQueryClient();
 
-  const walletsQuery = useQuery({ queryKey: ["wallets"], queryFn: api.getWallets });
+  const walletsQuery = useQuery({
+    queryKey: ["wallets"],
+    queryFn: api.getWallets,
+  });
   const wallets = useMemo(
     () => walletsQuery.data?.wallets ?? [],
     [walletsQuery.data],
@@ -92,9 +95,12 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
     from ??
     (initialSource && candidates.includes(initialSource)
       ? initialSource
-      : candidates[0] ?? null);
+      : (candidates[0] ?? null));
   const effectiveTo =
-    to ?? (effectiveFrom ? candidates.find((c) => c !== effectiveFrom) ?? null : null);
+    to ??
+    (effectiveFrom
+      ? (candidates.find((c) => c !== effectiveFrom) ?? null)
+      : null);
 
   // کلید یکتای درخواست؛ با تغییر پارامترها هنگام رندر، دوباره ساخته می‌شود
   const [idempotencyKey, setIdempotencyKey] = useState<string>(() =>
@@ -119,11 +125,16 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
 
   const amountError = useMemo(() => {
     if (!debouncedAmount) return null;
-    if (!AMOUNT_PATTERN.test(debouncedAmount)) return "مبلغ واردشده نامعتبر است";
-    if (/^0+(\.0+)?$/.test(debouncedAmount)) return "مبلغ باید بزرگ‌تر از صفر باشد";
+    if (!AMOUNT_PATTERN.test(debouncedAmount))
+      return "مبلغ واردشده نامعتبر است";
+    if (/^0+(\.0+)?$/.test(debouncedAmount))
+      return "مبلغ باید بزرگ‌تر از صفر باشد";
     if (
       sourceWallet &&
-      hasExcessFractionDigits(debouncedAmount, sourceWallet.currency.decimalPlaces)
+      hasExcessFractionDigits(
+        debouncedAmount,
+        sourceWallet.currency.decimalPlaces,
+      )
     )
       return `حداکثر ${sourceWallet.currency.decimalPlaces} رقم اعشار مجاز است`;
     return null;
@@ -167,7 +178,9 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
       }
     },
     onError: (error) => {
-      toast.error(error instanceof ApiError ? error.message : "خطا در انجام تبدیل");
+      toast.error(
+        error instanceof ApiError ? error.message : "خطا در انجام تبدیل",
+      );
     },
   });
 
@@ -196,7 +209,7 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
       </div>
 
       <Card className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-primary/8 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-linear-to-b from-primary/8 to-transparent" />
         <CardHeader className="relative">
           <CardTitle className="flex items-center gap-2">
             <Wallet className="size-4 text-primary" />
@@ -326,9 +339,12 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
                   <span className="text-muted-foreground">نرخ</span>
                   <span className="font-semibold tabular-nums" dir="ltr">
                     1 {effectiveFrom} ={" "}
-                    {Number(quoteQuery.data.quote.rate).toLocaleString("fa-IR", {
-                      maximumFractionDigits: 10,
-                    })}{" "}
+                    {Number(quoteQuery.data.quote.rate).toLocaleString(
+                      "fa-IR",
+                      {
+                        maximumFractionDigits: 10,
+                      },
+                    )}{" "}
                     {effectiveTo}
                   </span>
                 </div>
@@ -346,7 +362,7 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
                   )}
                 </span>
               </div>
-              <div className="space-y-1.5 rounded-2xl bg-gradient-to-l from-primary/10 to-transparent p-4 ring-1 ring-primary/20">
+              <div className="space-y-1.5 rounded-2xl bg-linear-to-l from-primary/10 to-transparent p-4 ring-1 ring-primary/20">
                 <span className="text-xs font-medium text-muted-foreground">
                   مبلغ دریافتی
                 </span>
@@ -380,9 +396,7 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
             <Button
               size="lg"
               className="w-full"
-              disabled={
-                !canSubmit || exchangeMutation.isPending
-              }
+              disabled={!canSubmit || exchangeMutation.isPending}
             >
               {exchangeMutation.isPending && (
                 <Loader2 className="ml-2 size-4 animate-spin" />
@@ -422,9 +436,12 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
                   <span className="block">
                     نرخ:{" "}
                     <b className="tabular-nums" dir="ltr">
-                      {Number(quoteQuery.data.quote.rate).toLocaleString("fa-IR", {
-                        maximumFractionDigits: 10,
-                      })}
+                      {Number(quoteQuery.data.quote.rate).toLocaleString(
+                        "fa-IR",
+                        {
+                          maximumFractionDigits: 10,
+                        },
+                      )}
                     </b>
                   </span>
                   <span className="block">

@@ -107,7 +107,7 @@ export function DashboardOverview({
       </div>
 
       {/* مجموع دارایی */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-indigo-600 to-indigo-800 p-6 text-primary-foreground shadow-xl shadow-primary/25 sm:p-8 dark:text-white">
+      <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary via-indigo-600 to-indigo-800 p-6 text-primary-foreground shadow-xl shadow-primary/25 sm:p-8 dark:text-white">
         <div className="pointer-events-none absolute -left-16 -top-20 size-64 rounded-full bg-white/10 blur-2xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/4 size-72 rounded-full bg-white/10 blur-3xl" />
 

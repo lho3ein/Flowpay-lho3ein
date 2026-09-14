@@ -8,10 +8,7 @@ import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -68,7 +65,9 @@ export function WalletsView() {
       setSelectedCode(null);
     },
     onError: (error) => {
-      toast.error(error instanceof ApiError ? error.message : "خطا در افزودن کیف پول");
+      toast.error(
+        error instanceof ApiError ? error.message : "خطا در افزودن کیف پول",
+      );
     },
   });
 
@@ -76,7 +75,9 @@ export function WalletsView() {
   const currencies = currenciesQuery.data?.currencies ?? [];
 
   const walletCodes = new Set(wallets.map((w) => w.currency.code));
-  const availableCurrencies = currencies.filter((c) => !walletCodes.has(c.code));
+  const availableCurrencies = currencies.filter(
+    (c) => !walletCodes.has(c.code),
+  );
 
   return (
     <div className="space-y-6">
@@ -105,7 +106,9 @@ export function WalletsView() {
               </Select>
               <Button
                 disabled={!selectedCode || addWalletMutation.isPending}
-                onClick={() => selectedCode && addWalletMutation.mutate(selectedCode)}
+                onClick={() =>
+                  selectedCode && addWalletMutation.mutate(selectedCode)
+                }
               >
                 {addWalletMutation.isPending ? (
                   <Loader2 className="ml-2 size-4 animate-spin" />
@@ -132,7 +135,9 @@ export function WalletsView() {
               <Wallet className="size-6" />
             </span>
             <div className="space-y-1">
-              <p className="font-medium text-foreground">شما هنوز کیف پولی ندارید.</p>
+              <p className="font-medium text-foreground">
+                شما هنوز کیف پولی ندارید.
+              </p>
               {availableCurrencies.length > 0 && (
                 <p className="text-sm">از فرم بالا یک ارز انتخاب کنید.</p>
               )}
@@ -154,7 +159,7 @@ function WalletCard({ wallet }: { wallet: WalletDto }) {
   return (
     <Card className="group relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10">
       <div
-        className={`pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b ${currencyStrip(wallet.currency.code)}`}
+        className={`pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b ${currencyStrip(wallet.currency.code)}`}
       />
       <CardContent className="relative space-y-5 p-5">
         <div className="flex items-center justify-between">

@@ -30,7 +30,7 @@ export default function LoginPage() {
     <div className="relative z-10 w-full max-w-md">
       <Card className="border-foreground/10 shadow-xl shadow-primary/5">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-3 grid size-14 place-items-center rounded-2xl bg-gradient-to-br from-primary to-indigo-600 text-primary-foreground shadow-lg shadow-primary/25">
+          <div className="mx-auto mb-3 grid size-14 place-items-center rounded-2xl bg-linear-to-br from-primary to-indigo-600 text-primary-foreground shadow-lg shadow-primary/25">
             <LogIn className="size-7" />
           </div>
           <CardTitle className="text-2xl font-black">ورود به فلوپی</CardTitle>
@@ -42,7 +42,9 @@ export default function LoginPage() {
           <LoginForm form={form} />
           <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-dashed border-foreground/15 bg-muted/50 p-3 text-xs leading-6 text-muted-foreground">
             <span>
-              <span className="font-semibold text-foreground">حساب نمونه: </span>
+              <span className="font-semibold text-foreground">
+                حساب نمونه:{" "}
+              </span>
               <span dir="ltr">demo@flowpay.app / @Demo1234</span>
             </span>
             <FillDemoUser form={form} />

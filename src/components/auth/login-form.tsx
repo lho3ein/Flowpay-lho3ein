@@ -81,7 +81,7 @@ export function LoginForm({ form }: prpFill) {
 
       <Button
         type="submit"
-        className="w-full bg-gradient-to-br from-primary to-indigo-600 shadow-lg shadow-primary/25 hover:from-primary hover:to-indigo-600"
+        className="w-full bg-linear-to-br from-primary to-indigo-600 shadow-lg shadow-primary/25 hover:from-primary hover:to-indigo-600"
         disabled={form.formState.isSubmitting}
       >
         {form.formState.isSubmitting && (

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { withAuth } from "@/lib/api";
-import { ExchangeError } from "@/lib/errors";
 import { computeQuote, hasExcessFractionDigits } from "@/lib/exchange";
 import { getLatestRate } from "@/lib/exchange-rate.service";
 import { quoteQuerySchema } from "@/validations/exchange.schema";

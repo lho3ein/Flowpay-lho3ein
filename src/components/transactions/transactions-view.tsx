@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ArrowDownUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -61,8 +61,13 @@ export function TransactionsView() {
   const [toDate, setToDate] = useState("");
   const [page, setPage] = useState(1);
 
-  // وقتی فیلتر عوض می‌شود به صفحه اول برگرد
-  useEffect(() => setPage(1), [status, type, fromCode, toCode, fromDate, toDate]);
+  // با تغییر فیلترها صفحه به ۱ برگردد (در خودِ رندر، بدون effect)
+  const filterSignature = [status, type, fromCode, toCode, fromDate, toDate].join("|");
+  const [prevFilterSig, setPrevFilterSig] = useState(filterSignature);
+  if (filterSignature !== prevFilterSig) {
+    setPrevFilterSig(filterSignature);
+    if (page !== 1) setPage(1);
+  }
 
   const query = useQuery({
     queryKey: [

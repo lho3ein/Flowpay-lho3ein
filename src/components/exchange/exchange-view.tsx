@@ -52,7 +52,10 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
   const queryClient = useQueryClient();
 
   const walletsQuery = useQuery({ queryKey: ["wallets"], queryFn: api.getWallets });
-  const wallets = walletsQuery.data?.wallets ?? [];
+  const wallets = useMemo(
+    () => walletsQuery.data?.wallets ?? [],
+    [walletsQuery.data],
+  );
 
   const [from, setFrom] = useState<string | null>(null);
   const [to, setTo] = useState<string | null>(null);
@@ -64,36 +67,35 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
     return () => clearTimeout(timer);
   }, [amount]);
 
-  // انتخاب اولیه از پارامتر ?source=
-  useEffect(() => {
-    const candidates = wallets.map((w) => w.currency.code);
-    if (from) return;
-    if (initialSource && candidates.includes(initialSource)) {
-      setFrom(initialSource);
-      const rest = candidates.filter((c) => c !== initialSource);
-      if (rest.length) setTo(rest[0]);
-    } else if (candidates.length > 0) {
-      setFrom(candidates[0]);
-      if (candidates.length > 1) setTo(candidates[1]);
-    }
-  }, [wallets, from, initialSource]);
+  // انتخاب پیش‌فرض ارزها به‌صورت مقدار مشتق‌شده در رندر (بدون effect)
+  const candidates = wallets.map((w) => w.currency.code);
+  const effectiveFrom =
+    from ??
+    (initialSource && candidates.includes(initialSource)
+      ? initialSource
+      : candidates[0] ?? null);
+  const effectiveTo =
+    to ?? (effectiveFrom ? candidates.find((c) => c !== effectiveFrom) ?? null : null);
 
-  // کلید یکتای درخواست؛ با تغییر پارامترها مجدد ساخته می‌شود
+  // کلید یکتای درخواست؛ با تغییر پارامترها هنگام رندر، دوباره ساخته می‌شود
   const [idempotencyKey, setIdempotencyKey] = useState<string>(() =>
     crypto.randomUUID(),
   );
-  useEffect(() => {
+  const paramSig = `${effectiveFrom}|${effectiveTo}|${debouncedAmount}`;
+  const [prevParamSig, setPrevParamSig] = useState(paramSig);
+  if (paramSig !== prevParamSig) {
+    setPrevParamSig(paramSig);
     setIdempotencyKey(crypto.randomUUID());
-  }, [from, to, debouncedAmount]);
+  }
 
   const sourceWallet = useMemo(
-    () => wallets.find((w) => w.currency.code === from) ?? null,
-    [wallets, from],
+    () => wallets.find((w) => w.currency.code === effectiveFrom) ?? null,
+    [wallets, effectiveFrom],
   );
 
   const toOptions = useMemo(
-    () => wallets.filter((w) => w.currency.code !== from),
-    [wallets, from],
+    () => wallets.filter((w) => w.currency.code !== effectiveFrom),
+    [wallets, effectiveFrom],
   );
 
   const amountError = useMemo(() => {
@@ -116,19 +118,22 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
   }, [sourceWallet, debouncedAmount, amountValid]);
 
   const quoteEnabled =
-    Boolean(from && to && from !== to) && amountValid && !insufficient;
+    Boolean(effectiveFrom && effectiveTo && effectiveFrom !== effectiveTo) &&
+    amountValid &&
+    !insufficient;
 
   const quoteQuery = useQuery({
-    queryKey: ["exchange-quote", from, to, debouncedAmount],
-    queryFn: () => api.getExchangeQuote(from!, to!, debouncedAmount),
+    queryKey: ["exchange-quote", effectiveFrom, effectiveTo, debouncedAmount],
+    queryFn: () =>
+      api.getExchangeQuote(effectiveFrom!, effectiveTo!, debouncedAmount),
     enabled: quoteEnabled,
   });
 
   const exchangeMutation = useMutation({
     mutationFn: () =>
       api.executeExchange({
-        fromCode: from!,
-        toCode: to!,
+        fromCode: effectiveFrom!,
+        toCode: effectiveTo!,
         sourceAmount: debouncedAmount,
         idempotencyKey,
       }),
@@ -146,8 +151,8 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
   });
 
   function swap() {
-    setFrom(to);
-    setTo(from);
+    setFrom(effectiveTo);
+    setTo(effectiveFrom);
   }
 
   const sourceCurrency = sourceWallet?.currency;
@@ -173,7 +178,7 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
             <Field>
               <FieldLabel>از</FieldLabel>
               <FieldContent>
-                <Select value={from} onValueChange={setFrom}>
+                <Select value={effectiveFrom} onValueChange={setFrom}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="انتخاب ارز" />
                   </SelectTrigger>
@@ -203,7 +208,7 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
             <Field>
               <FieldLabel>به</FieldLabel>
               <FieldContent>
-                <Select value={to} onValueChange={setTo}>
+                <Select value={effectiveTo} onValueChange={setTo}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="انتخاب ارز" />
                   </SelectTrigger>

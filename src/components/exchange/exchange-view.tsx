@@ -79,6 +79,7 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
   const [to, setTo] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
   const [debouncedAmount, setDebouncedAmount] = useState("");
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedAmount(amount), 400);
@@ -157,6 +158,7 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
       }),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["wallets"] });
+      setConfirmOpen(false);
       if (data.replayed) {
         toast.info("این درخواست قبلاً ثبت شده بود.");
       } else {
@@ -371,7 +373,7 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
         </CardContent>
       </Card>
 
-      <AlertDialog>
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogTrigger
           render={
             <Button

@@ -3,6 +3,15 @@ import Decimal from "decimal.js";
 /** نرخ کارمزد: ۰٫۷۵٪ */
 export const FEE_RATE = new Decimal("0.0075");
 
+/**
+ * بررسی می‌کند که مبلغِ رشته‌ای بیش از اعشار مجاز نداشته باشد.
+ */
+export function hasExcessFractionDigits(amount: string, decimalPlaces: number): boolean {
+  const parts = amount.split(".");
+  if (parts.length < 2) return false;
+  return parts[1].length > decimalPlaces;
+}
+
 export interface ExchangeQuote {
   sourceAmount: Decimal;
   fee: Decimal;

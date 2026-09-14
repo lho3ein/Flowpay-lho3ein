@@ -159,6 +159,7 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["wallets"] });
       setConfirmOpen(false);
+      setAmount("");
       if (data.replayed) {
         toast.info("این درخواست قبلاً ثبت شده بود.");
       } else {

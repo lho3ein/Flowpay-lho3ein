@@ -20,3 +20,33 @@ export interface WalletsResponse {
 export interface CurrenciesResponse {
   currencies: CurrencyDto[];
 }
+
+export interface ExchangeQuoteResponse {
+  quote: {
+    sourceAmount: string;
+    fee: string;
+    destinationAmount: string;
+    rate: string;
+    validFrom: string;
+  };
+  source: CurrencyDto;
+  target: CurrencyDto;
+}
+
+export interface ExchangeTransactionDto {
+  id: string;
+  status: string;
+  type: string;
+  sourceAmount: string;
+  fee: string;
+  exchangeRate: string;
+  destinationAmount: string;
+  fromCode: string;
+  toCode: string;
+  createdAt: string;
+}
+
+export interface ExchangeResponse {
+  transaction: ExchangeTransactionDto;
+  replayed: boolean;
+}

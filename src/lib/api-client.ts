@@ -1,4 +1,10 @@
-import type { CurrenciesResponse, WalletDto, WalletsResponse } from "@/types/models";
+import type {
+  CurrenciesResponse,
+  ExchangeQuoteResponse,
+  ExchangeResponse,
+  WalletDto,
+  WalletsResponse,
+} from "@/types/models";
 
 export class ApiError extends Error {
   status: number;
@@ -28,4 +34,19 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ currencyCode }),
     }).then((r) => handle<{ wallet: WalletDto }>(r)),
+  getExchangeQuote: (from: string, to: string, amount: string) =>
+    fetch(
+      `/api/exchange/quote?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&amount=${encodeURIComponent(amount)}`,
+    ).then((r) => handle<ExchangeQuoteResponse>(r)),
+  executeExchange: (payload: {
+    fromCode: string;
+    toCode: string;
+    sourceAmount: string;
+    idempotencyKey: string;
+  }) =>
+    fetch("/api/exchange", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).then((r) => handle<ExchangeResponse>(r)),
 };

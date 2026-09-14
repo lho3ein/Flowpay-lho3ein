@@ -25,7 +25,11 @@ const NAV_ITEMS = [
   { href: "/transactions", label: "تراکنش‌ها" },
 ];
 
-export function DashboardNav({ user }: { user: { name?: string | null; email?: string | null } }) {
+export function DashboardNav({
+  user,
+}: {
+  user: { name?: string | null; email?: string | null };
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const initials = (user.name ?? user.email ?? "؟")
@@ -41,15 +45,19 @@ export function DashboardNav({ user }: { user: { name?: string | null; email?: s
     }`;
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center justify-between gap-4">
-        <div className="flex items-center gap-6">
+    <header className="container mx-auto sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex h-14 items-center justify-between gap-4">
+        <div className="flex items-center mx-auto gap-6">
           <Link href="/dashboard" className="flex items-center gap-2 font-bold">
             فلوپی
           </Link>
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="items-center gap-1 flex">
             {NAV_ITEMS.map((item) => (
-              <Link key={item.href} href={item.href} className={navClass(item.href)}>
+              <Link
+                key={item.href}
+                href={item.href}
+                className={navClass(item.href)}
+              >
                 {item.label}
               </Link>
             ))}
@@ -71,14 +79,18 @@ export function DashboardNav({ user }: { user: { name?: string | null; email?: s
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="font-normal">
-                  <div className="text-sm font-medium">{user.name ?? "کاربر"}</div>
-                  <div className="text-xs text-muted-foreground">{user.email}</div>
+                  <div className="text-sm font-medium">
+                    {user.name ?? "کاربر"}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {user.email}
+                  </div>
                 </DropdownMenuLabel>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className="text-destructive focus:text-destructive"
-                onSelect={async () => {
+                className="text-destructive focus:text-destructive cursor-pointer hover:bg-accent/15"
+                onClick={async () => {
                   await signOut({ redirect: false });
                   router.push("/login");
                 }}
@@ -92,7 +104,7 @@ export function DashboardNav({ user }: { user: { name?: string | null; email?: s
       </div>
 
       {/* منوی موبایل */}
-      <nav className="flex gap-1 overflow-x-auto border-t px-4 py-1.5 md:hidden">
+      {/* <nav className="flex items-center justify-center gap-1 border-t px-4 py-1.5 md:hidden">
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.href}
@@ -102,7 +114,7 @@ export function DashboardNav({ user }: { user: { name?: string | null; email?: s
             {item.label}
           </Link>
         ))}
-      </nav>
+      </nav> */}
     </header>
   );
 }

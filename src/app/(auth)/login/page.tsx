@@ -37,18 +37,14 @@ export default function LoginPage() {
           <CardDescription>
             به کیف پول چندارزی خود دسترسی پیدا کنید
           </CardDescription>
+          <div className="flex flex-wrap items-center justify-between gap-2 mt-4 rounded-xl border border-dashed border-foreground/15 bg-muted/50 p-3 text-xs leading-6 text-muted-foreground">
+            <span className="font-semibold text-foreground">حساب نمونه: </span>
+            <span dir="ltr">demo@flowpay.app / @Demo1234</span>
+            <FillDemoUser form={form} />
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <LoginForm form={form} />
-          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-dashed border-foreground/15 bg-muted/50 p-3 text-xs leading-6 text-muted-foreground">
-            <span>
-              <span className="font-semibold text-foreground">
-                حساب نمونه:{" "}
-              </span>
-              <span dir="ltr">demo@flowpay.app / @Demo1234</span>
-            </span>
-            <FillDemoUser form={form} />
-          </div>
         </CardContent>
       </Card>
     </div>

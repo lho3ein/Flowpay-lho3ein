@@ -48,10 +48,7 @@ export function DashboardNav({
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4">
         <div className="flex items-center gap-6">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2 font-black"
-          >
+          <Link href="/" className="flex items-center gap-2 font-black">
             <span className="grid size-8 place-items-center rounded-xl bg-linear-to-br from-primary to-indigo-600 text-primary-foreground shadow-md shadow-primary/25">
               <Wallet className="size-4" />
             </span>

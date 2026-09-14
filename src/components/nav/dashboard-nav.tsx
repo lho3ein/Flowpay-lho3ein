@@ -18,6 +18,7 @@ import {
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "داشبورد" },
+  { href: "/wallets", label: "کیف پول‌ها" },
   { href: "/exchange", label: "تبدیل ارز" },
   { href: "/transactions", label: "تراکنش‌ها" },
 ];

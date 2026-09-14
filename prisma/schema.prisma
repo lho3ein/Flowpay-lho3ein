@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum TransactionType {
+  EXCHANGE
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  wallets         Wallet[]
+  transactions    Transaction[]
+  idempotencyKeys IdempotencyKey[]
+}
+
+model Currency {
+  id            String   @id @default(cuid())
+  code          String   @unique
+  name          String
+  symbol        String
+  decimalPlaces Int
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  wallets          Wallet[]
+  rateBases        ExchangeRate[] @relation("RateBase")
+  rateQuotes       ExchangeRate[] @relation("RateQuote")
+  fromTransactions Transaction[]  @relation("FromTransaction")
+  toTransactions   Transaction[]  @relation("ToTransaction")
+}
+
+model Wallet {
+  id         String   @id @default(cuid())
+  userId     String
+  currencyId String
+  balance    Decimal  @default(0) @db.Decimal(20, 8)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currency     Currency @relation(fields: [currencyId], references: [id])
+
+  @@unique([userId, currencyId])
+  @@index([userId])
+}
+
+model ExchangeRate {
+  id              String   @id @default(cuid())
+  baseCurrencyId  String
+  quoteCurrencyId String
+  rate            Decimal  @db.Decimal(20, 10)
+  validFrom       DateTime
+  validUntil      DateTime?
+  createdAt       DateTime @default(now())
+
+  baseCurrency  Currency @relation("RateBase", fields: [baseCurrencyId], references: [id])
+  quoteCurrency Currency @relation("RateQuote", fields: [quoteCurrencyId], references: [id])
+
+  @@index([baseCurrencyId, quoteCurrencyId, validFrom])
+}
+
+model Transaction {
+  id                String            @id @default(cuid())
+  userId            String
+  type              TransactionType
+  status            TransactionStatus
+  fromCurrencyId    String
+  toCurrencyId      String
+  sourceAmount      Decimal           @db.Decimal(20, 8)
+  fee               Decimal           @db.Decimal(20, 8)
+  exchangeRate      Decimal           @db.Decimal(20, 10)
+  destinationAmount Decimal           @db.Decimal(20, 8)
+  idempotencyKeyId  String?           @unique
+  createdAt         DateTime          @default(now())
+
+  user           User             @relation(fields: [userId], references: [id])
+  fromCurrency   Currency         @relation("FromTransaction", fields: [fromCurrencyId], references: [id])
+  toCurrency     Currency         @relation("ToTransaction", fields: [toCurrencyId], references: [id])
+  idempotencyKey IdempotencyKey?  @relation(fields: [idempotencyKeyId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([userId, fromCurrencyId])
+  @@index([userId, toCurrencyId])
+  @@index([userId, status])
+}
+
+model IdempotencyKey {
+  id            String    @id @default(cuid())
+  userId        String
+  key           String
+  transactionId String?   @unique
+  createdAt     DateTime  @default(now())
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transaction Transaction?
+
+  @@unique([userId, key])
+  @@index([userId])
+}

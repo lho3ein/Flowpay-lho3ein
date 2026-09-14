@@ -12,10 +12,7 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { formatMoney } from "@/lib/format";
 
 type WalletItem = {
@@ -85,14 +82,20 @@ export function DashboardOverview({
       {/* سربرگ */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-black sm:text-3xl">سلام {firstName} 👋</h1>
+          <h1 className="text-2xl font-black sm:text-3xl">
+            سلام {firstName} 👋
+          </h1>
           <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
             <Coins className="size-4" />
             نمای کلی دارایی‌های شما
           </p>
         </div>
         <div className="flex gap-2">
-          <Button nativeButton={false} variant="outline" render={<Link href="/transactions" />}>
+          <Button
+            nativeButton={false}
+            variant="outline"
+            render={<Link href="/transactions" />}
+          >
             <ReceiptText className="size-4" />
             تراکنش‌ها
           </Button>
@@ -104,7 +107,7 @@ export function DashboardOverview({
       </div>
 
       {/* مجموع دارایی */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-indigo-600 to-indigo-800 p-6 text-primary-foreground shadow-xl shadow-primary/25 sm:p-8">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-indigo-600 to-indigo-800 p-6 text-primary-foreground shadow-xl shadow-primary/25 sm:p-8 dark:text-white">
         <div className="pointer-events-none absolute -left-16 -top-20 size-64 rounded-full bg-white/10 blur-2xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/4 size-72 rounded-full bg-white/10 blur-3xl" />
 
@@ -114,22 +117,20 @@ export function DashboardOverview({
               <span className="grid size-9 place-items-center rounded-xl bg-white/15">
                 <Wallet className="size-5" />
               </span>
-              <span className="text-sm text-primary-foreground/85">
+              <span className="text-sm text-primary-foreground/85 dark:text-white/85">
                 مجموع دارایی (تخمینی به دلار)
               </span>
             </div>
-            <Badge className="border-white/25 bg-white/15 text-primary-foreground">
+            <Badge className="border-white/25 bg-white/15 text-primary-foreground dark:text-white/85">
               برآورد لحظه‌ای
             </Badge>
           </div>
 
           <div className="flex flex-wrap items-end justify-between gap-4">
             <p className="text-4xl font-black tabular-nums sm:text-5xl">
-              {totalUsd
-                ? formatMoney(totalUsd, 2, "$")
-                : "—"}
+              {totalUsd ? formatMoney(totalUsd, 2, "$") : "—"}
             </p>
-            <p className="max-w-xs text-xs text-primary-foreground/70">
+            <p className="max-w-xs text-xs text-primary-foreground/70 dark:text-white/85">
               {totalUsd === null
                 ? "نرخ تبدیل برخی ارزها در دسترس نیست؛ مجموع کامل نمایش داده نمی‌شود."
                 : "بر اساس نرخ‌های لحظه‌ای ارز و مجموع موجودی همه‌ی کیف پول‌های شما محاسبه شده است."}
@@ -175,7 +176,9 @@ export function DashboardOverview({
                   </div>
 
                   <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">{wallet.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {wallet.name}
+                    </p>
                     <p
                       className="text-xl font-bold tabular-nums"
                       dir="ltr"
@@ -224,7 +227,9 @@ export function DashboardOverview({
                   <ArrowDownUp className="size-6" />
                 </span>
                 <div className="space-y-1">
-                  <p className="font-medium text-foreground">هنوز تراکنشی ندارید</p>
+                  <p className="font-medium text-foreground">
+                    هنوز تراکنشی ندارید
+                  </p>
                   <p className="text-sm">
                     اولین تبدیل خود را از صفحه‌ی «تبدیل ارز» انجام دهید.
                   </p>
@@ -278,7 +283,10 @@ export function DashboardOverview({
                             ? `${formatMoney(tx.sourceAmount, source.decimalPlaces, source.symbol)}`
                             : formatMoney(tx.sourceAmount)}
                         </p>
-                        <p className="text-xs text-success tabular-nums" dir="ltr">
+                        <p
+                          className="text-xs text-success tabular-nums"
+                          dir="ltr"
+                        >
                           {quote &&
                             quote.code !== source?.code &&
                             `+ ${formatMoney(tx.destinationAmount, quote.decimalPlaces, quote.symbol)}`}

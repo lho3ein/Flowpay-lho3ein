@@ -2,7 +2,14 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Decimal from "decimal.js";
-import { ArrowDownUp, Loader2, RefreshCw } from "lucide-react";
+import {
+  ArrowDownUp,
+  BadgePercent,
+  Loader2,
+  RefreshCw,
+  Scale,
+  Wallet,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -47,6 +54,17 @@ import { hasExcessFractionDigits } from "@/lib/exchange";
 import { formatMoney } from "@/lib/format";
 
 const AMOUNT_PATTERN = /^\d{1,14}(\.\d{1,8})?$/;
+
+const CURRENCY_TONE: Record<string, string> = {
+  USD: "bg-currency-usd/12 text-currency-usd ring-currency-usd/30",
+  EUR: "bg-currency-eur/12 text-currency-eur ring-currency-eur/30",
+  GBP: "bg-currency-gbp/12 text-currency-gbp ring-currency-gbp/30",
+  AED: "bg-currency-aed/12 text-currency-aed ring-currency-aed/30",
+};
+
+function currencyTone(code: string) {
+  return CURRENCY_TONE[code] ?? "bg-primary/10 text-primary ring-primary/30";
+}
 
 export function ExchangeView({ initialSource }: { initialSource?: string }) {
   const queryClient = useQueryClient();
@@ -156,24 +174,36 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
   }
 
   const sourceCurrency = sourceWallet?.currency;
+  const canSubmit = Boolean(
+    quoteQuery.data && !quoteQuery.isError && !amountError && !insufficient,
+  );
 
   return (
-    <div className="mx-auto max-w-xl space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold">تبدیل ارز</h1>
+    <div className="mx-auto max-w-xl space-y-5">
+      <div className="space-y-1">
+        <h1 className="flex items-center gap-2 text-2xl font-black sm:text-3xl">
+          <span className="grid size-10 place-items-center rounded-2xl bg-primary/10 text-primary">
+            <ArrowDownUp className="size-5" />
+          </span>
+          تبدیل ارز
+        </h1>
         <p className="text-sm text-muted-foreground">
           تبدیل امن و آنی بین ارزهای کیف پول شما
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">جزئیات تبدیل</CardTitle>
+      <Card className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-primary/8 to-transparent" />
+        <CardHeader className="relative">
+          <CardTitle className="flex items-center gap-2">
+            <Wallet className="size-4 text-primary" />
+            جزئیات تبدیل
+          </CardTitle>
           <CardDescription>
             نرخ لحظه‌ای از سرویس نرخ ارز خوانده می‌شود
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="relative space-y-4">
           <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-2">
             <Field>
               <FieldLabel>از</FieldLabel>
@@ -199,7 +229,7 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
               size="icon"
               className="mb-0.5"
               onClick={swap}
-              disabled={!from && !to}
+              disabled={!effectiveFrom && !effectiveTo}
               aria-label="جابه‌جایی ارزها"
             >
               <ArrowDownUp className="size-4" />
@@ -231,19 +261,26 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
                 id="amount"
                 inputMode="decimal"
                 dir="ltr"
-                placeholder="0.00"
+                placeholder={"0.00"}
                 value={amount}
                 aria-invalid={!!amountError}
                 onChange={(e) => setAmount(e.target.value)}
               />
               {sourceCurrency && (
-                <FieldDescription>
+                <FieldDescription className="flex items-center gap-1.5">
+                  <span
+                    className={`grid size-5 place-items-center rounded-full text-xs ring-1 ${currencyTone(sourceCurrency.code)}`}
+                  >
+                    {sourceCurrency.code.slice(0, 1)}
+                  </span>
                   موجودی:{" "}
-                  {formatMoney(
-                    sourceWallet!.balance,
-                    sourceCurrency.decimalPlaces,
-                    sourceCurrency.symbol,
-                  )}
+                  <b className="tabular-nums">
+                    {formatMoney(
+                      sourceWallet!.balance,
+                      sourceCurrency.decimalPlaces,
+                      sourceCurrency.symbol,
+                    )}
+                  </b>
                 </FieldDescription>
               )}
               <FieldError errors={[{ message: amountError ?? undefined }]} />
@@ -256,8 +293,16 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-base">نقل قول</CardTitle>
+        <CardHeader className="flex-row items-center justify-between space-y-0">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Scale className="size-4 text-primary" />
+            نقل‌قول
+          </CardTitle>
+          {quoteQuery.data && (
+            <Badge className="border-success/30 bg-success/10 text-success">
+              به‌روز
+            </Badge>
+          )}
         </CardHeader>
         <CardContent>
           {quoteQuery.isLoading ? (
@@ -266,25 +311,30 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
               <Skeleton className="h-5 w-1/2" />
             </div>
           ) : quoteQuery.isError ? (
-            <div className="rounded-lg border border-destructive/50 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            <div className="rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
               {quoteQuery.error instanceof ApiError
                 ? quoteQuery.error.message
                 : "خطا در دریافت نقل قول"}
             </div>
           ) : quoteQuery.data ? (
             <div className="space-y-4">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">نرخ</span>
-                <span className="font-semibold tabular-nums" dir="ltr">
-                  1 {from} ={" "}
-                  {Number(quoteQuery.data.quote.rate).toLocaleString("fa-IR", {
-                    maximumFractionDigits: 10,
-                  })}{" "}
-                  {to}
-                </span>
+              <div className="rounded-2xl bg-muted/70 p-4">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">نرخ</span>
+                  <span className="font-semibold tabular-nums" dir="ltr">
+                    1 {effectiveFrom} ={" "}
+                    {Number(quoteQuery.data.quote.rate).toLocaleString("fa-IR", {
+                      maximumFractionDigits: 10,
+                    })}{" "}
+                    {effectiveTo}
+                  </span>
+                </div>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">کارمزد (۰٫۷۵٪)</span>
+                <span className="flex items-center gap-1.5 text-muted-foreground">
+                  <BadgePercent className="size-4" />
+                  کارمزد (۰٫۷۵٪)
+                </span>
                 <span className="tabular-nums">
                   {formatMoney(
                     quoteQuery.data.quote.fee,
@@ -293,17 +343,24 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
                   )}
                 </span>
               </div>
-              <div className="space-y-1 rounded-lg border bg-muted/50 p-3">
-                <span className="text-xs text-muted-foreground">
+              <div className="space-y-1.5 rounded-2xl bg-gradient-to-l from-primary/10 to-transparent p-4 ring-1 ring-primary/20">
+                <span className="text-xs font-medium text-muted-foreground">
                   مبلغ دریافتی
                 </span>
-                <p className="text-xl font-bold tabular-nums">
-                  {formatMoney(
-                    quoteQuery.data.quote.destinationAmount,
-                    quoteQuery.data.target.decimalPlaces,
-                    quoteQuery.data.target.symbol,
-                  )}
-                </p>
+                <div className="flex items-center justify-between">
+                  <span
+                    className={`grid size-9 place-items-center rounded-xl ring-1 ${currencyTone(effectiveTo ?? "")}`}
+                  >
+                    <ArrowDownUp className="size-4" />
+                  </span>
+                  <p className="text-2xl font-black tabular-nums">
+                    {formatMoney(
+                      quoteQuery.data.quote.destinationAmount,
+                      quoteQuery.data.target.decimalPlaces,
+                      quoteQuery.data.target.symbol,
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
           ) : (
@@ -318,13 +375,10 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
         <AlertDialogTrigger
           render={
             <Button
+              size="lg"
               className="w-full"
               disabled={
-                !quoteQuery.data ||
-                quoteQuery.isError ||
-                exchangeMutation.isPending ||
-                !!amountError ||
-                !!insufficient
+                !canSubmit || exchangeMutation.isPending
               }
             >
               {exchangeMutation.isPending && (
@@ -398,14 +452,6 @@ export function ExchangeView({ initialSource }: { initialSource?: string }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {from && to && (
-        <div className="flex justify-center">
-          <Badge variant="secondary">
-            تبدیل از {from} به {to}
-          </Badge>
-        </div>
-      )}
     </div>
   );
 }

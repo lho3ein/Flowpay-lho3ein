@@ -1,7 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import { LogOut } from "lucide-react";
+import { LogOut, Wallet } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -38,20 +38,23 @@ export function DashboardNav({
     .toUpperCase();
 
   const navClass = (href: string) =>
-    `rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+    `flex items-center gap-1 rounded-xl px-3 py-1.5 text-sm font-medium transition-colors ${
       pathname === href
-        ? "bg-muted text-foreground"
+        ? "bg-primary/10 text-primary"
         : "text-muted-foreground hover:bg-muted hover:text-foreground"
     }`;
 
   return (
-    <header className="container mx-auto sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-14 items-center justify-between gap-4">
-        <div className="flex items-center mx-auto gap-6">
-          <Link href="/dashboard" className="flex items-center gap-2 font-bold">
+    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4">
+        <div className="flex items-center gap-6">
+          <Link href="/dashboard" className="flex items-center gap-2 font-black">
+            <span className="grid size-8 place-items-center rounded-xl bg-gradient-to-br from-primary to-indigo-600 text-primary-foreground shadow-md shadow-primary/25">
+              <Wallet className="size-4" />
+            </span>
             فلوپی
           </Link>
-          <nav className="items-center gap-1 flex">
+          <nav className="hidden items-center gap-1 md:flex">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
@@ -104,7 +107,7 @@ export function DashboardNav({
       </div>
 
       {/* منوی موبایل */}
-      {/* <nav className="flex items-center justify-center gap-1 border-t px-4 py-1.5 md:hidden">
+      <nav className="flex items-center gap-2 overflow-x-auto border-t bg-background/80 px-4 py-2 backdrop-blur md:hidden">
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.href}
@@ -114,7 +117,7 @@ export function DashboardNav({
             {item.label}
           </Link>
         ))}
-      </nav> */}
+      </nav>
     </header>
   );
 }

@@ -72,8 +72,8 @@ export default async function LandingPage() {
   return (
     <div className="flex min-h-svh flex-col overflow-x-hidden bg-background">
       {/* ===== Header ===== */}
-      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
-        <div className="container mx-auto flex h-16 items-center justify-between gap-4">
+      <header className="fixed w-full top-0 z-40 border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
+        <div className="container md:mx-auto flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="grid size-9 place-items-center rounded-xl bg-linear-to-br from-primary to-indigo-600 text-primary-foreground shadow-md shadow-primary/25">
               <Wallet className="size-5" />
@@ -100,13 +100,18 @@ export default async function LandingPage() {
           <div className="flex items-center gap-2">
             <ThemeToggle />
             {session?.user ? (
-              <Button nativeButton={false} render={<Link href="/dashboard" />}>
+              <Button
+                className={"ml-2"}
+                nativeButton={false}
+                render={<Link href="/dashboard" />}
+              >
                 <Wallet className="size-4" />
                 داشبورد من
               </Button>
             ) : (
               <>
                 <Button
+                  className={"ml-2"}
                   nativeButton={false}
                   variant="ghost"
                   render={<Link href="/login" />}

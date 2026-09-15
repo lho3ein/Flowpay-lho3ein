@@ -59,7 +59,7 @@ export function DashboardNav({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-xs sm:text-base ${navClass(item.href)}`}
+                className={`text-xs sm:text-base hidden md:flex ${navClass(item.href)}`}
               >
                 {item.label}
               </Link>
@@ -107,7 +107,7 @@ export function DashboardNav({
       </div>
 
       {/* منوی موبایل */}
-      {/* <nav className="flex items-center gap-2 overflow-x-auto border-t bg-background/80 px-4 py-2 backdrop-blur md:hidden">
+      <nav className="flex justify-center items-center gap-2 overflow-x-auto border-t bg-background/80 px-4 py-2 backdrop-blur md:hidden">
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.href}
@@ -117,7 +117,7 @@ export function DashboardNav({
             {item.label}
           </Link>
         ))}
-      </nav> */}
+      </nav>
     </header>
   );
 }
